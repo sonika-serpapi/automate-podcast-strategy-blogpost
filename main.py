@@ -6,6 +6,7 @@ load_dotenv()
 api_key = os.environ["SERPAPI_API_KEY"]
 
 topic = "Algorithmic bias with AI" # Change this to your topic of interest
+related_topic_for_google_trends = "AI bias in healthcare" # Change this to your topic of interest
 
 params = {
   "q": topic,
@@ -46,7 +47,7 @@ for block in related_searches:
 params = {
   "api_key": api_key,
   "engine": "google_trends",
-  "q": topic,
+  "q": topic + "," + related_topic_for_google_trends,
   "data_type": "TIMESERIES",
   "hl": "en",
   "geo": "US"
@@ -55,10 +56,10 @@ params = {
 search = GoogleSearch(params)
 results = search.get_dict()
 
-# This provides two kinds of data - timeline_data and averages, which you can use depending on your use case
+# This provides two kinds of data - timeline_data and averages, which you can select depending on your use case
 interest_over_time_results = results["interest_over_time"]
 print("GOOGLE TRENDS DATA:")
-print(interest_over_time_results)
+print(interest_over_time_results["averages"])
 
 params = {
   "api_key": api_key,
@@ -71,6 +72,9 @@ params = {
 search = GoogleSearch(params)
 results = search.get_dict()
 
-news_results = results["news_results"]
 print("NEWS RESULTS:")
-print(news_results)
+news_results = results["news_results"]
+for i in range(len(news_results)):
+    print("Result ", i + 1, ":")
+    print("Title:", news_results[i]["title"])
+    print("Link:", news_results[i]["link"])
